@@ -39,7 +39,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/dashboard");
+    router.push("/app/admin");
     router.refresh();
   }
 

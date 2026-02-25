@@ -1,18 +1,22 @@
 // types/dashboard.ts
+export type DashboardCompany = {
+  id: number;
+  sector: string | null;
+  created_at: string | null; // ISO string
+};
+
+export type DashboardSession = {
+  id: number;
+  company: DashboardCompany;
+  status: "draft" | "active" | "finished" | string;
+  groups: number;
+  votes: number;
+};
+
 export type DashboardStats = {
   activeSessions: number;
   totalGroups: number;
   ratedCards: number;
-};
-
-export type DashboardSession = {
-  id: string;
-  name: string;
-  status: "En curso" | "Borrador" | "Canvas" | "Cerrada";
-  company: string;
-  groups: number;
-  tags: string[];
-  progress: number; // 0-100
 };
 
 export type DashboardData = {

@@ -4,11 +4,14 @@ import Credentials from "next-auth/providers/credentials";
 interface CorpAuthResponse {
   refresh: string;
   access: string;
+  user?: {
+    id?: number | string;
+    email?: string;
+    name?: string;
+  };
 }
-
 const handler = NextAuth({
    debug: true,
-
   session: { strategy: "jwt" },
 
   providers: [
