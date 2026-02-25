@@ -1,32 +1,43 @@
-// app/(protected)/app/admin/page.tsx
+"use client";
+
+import { useEffect, useState } from "react";
 import DashboardView from "@/components/screens/DashboardView";
 import type { DashboardData } from "@/types/dashboard";
 
-async function getDashboardData(): Promise<DashboardData> {
-  // IMPORTANTE: ajusta esto a tu backend real
-  // Ej: process.env.NEXT_PUBLIC_API_URL = "http://localhost:8000/"
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+export default function AdminPage() {
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!baseUrl) {
-    throw new Error("Missing NEXT_PUBLIC_API_URL env var");
-  }
+  useEffect(() => {
+    async function loadDashboard() {
+      try {
+        const token = localStorage.getItem("admin_access");
 
-  const res = await fetch(`${baseUrl}api/admin/dashboard/`, {
-    // Si usas cookies/httpOnly para auth:
-    credentials: "include",
-    // Si usas JWT en header, esto NO basta: ver nota más abajo.
-    cache: "no-store",
-  });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/dashboard/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
 
-  if (!res.ok) {
-    // Opcional: log y fallback
-    throw new Error(`Dashboard fetch failed: ${res.status}`);
-  }
+        if (!res.ok) throw new Error("Dashboard fetch failed");
 
-  return res.json();
-}
+        const json = await res.json();
+        setData(json);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
 
-export default async function AdminPage() {
-  const data = await getDashboardData();
+    loadDashboard();
+  }, []);
+
+  if (loading) return <div>Cargando dashboard...</div>;
+  if (!data) return <div>Error cargando dashboard</div>;
+
   return <DashboardView data={data} />;
 }
