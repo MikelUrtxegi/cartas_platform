@@ -8,7 +8,7 @@ const tabs = [
   { label: "Workshop", href: "/app/workshop" },
   { label: "Dashboard", href: "/app/admin" },
   { label: "Mazos", href: "/app/admin/mazos" },
-  { label: "Cartas", href: "/app/admin/cartas" }, // ✅ nuevo
+  { label: "Cartas", href: "/app/admin/cartas" },
   { label: "Resultados", href: "/app/admin/resultados" },
 ];
 
