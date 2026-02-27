@@ -1,22 +1,26 @@
 "use client";
 
+import type { CardsData } from "@/types/cards";
+
 type Card = {
-  id: number;
+  id: number | string;
   title?: string;
   name?: string;
   description?: string | null;
 };
 
-export default function CardsView({ items }: { items: Card[] }) {
-  return (
-    <div>
-      <h1 className="text-3xl font-semibold text-slate-900">Cartas</h1>
-      <p className="mt-1 text-slate-500">Gestiona las cartas disponibles</p>
+export default function CardsView({ data }: { data: CardsData }) {
+  const items: Card[] = data.cards ?? [];
 
-      <div className="mt-6 rounded-xl border bg-white shadow-sm">
+  return (
+    <main className="admin-page">
+      <h1 className="admin-title">Cartas</h1>
+      <p className="admin-subtitle">Gestiona las cartas disponibles</p>
+
+      <div className="mt-6 admin-panel">
         <ul className="divide-y">
           {items.map((c) => (
-            <li key={c.id} className="p-5">
+            <li key={String(c.id)} className="p-5">
               <div className="text-sm font-semibold text-slate-900">
                 {c.title ?? c.name ?? `Carta #${c.id}`}
               </div>
@@ -31,6 +35,6 @@ export default function CardsView({ items }: { items: Card[] }) {
           )}
         </ul>
       </div>
-    </div>
+    </main>
   );
 }

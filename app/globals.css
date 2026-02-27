@@ -124,3 +124,33 @@ h2,
 h3 {
   font-family: "Space Grotesk", "Inter", system-ui, sans-serif;
 }
+
+@layer components {
+  /* Layout */
+  .admin-page {
+    @apply mx-auto max-w-5xl px-6 py-10;
+  }
+
+  /* Header */
+  .admin-title {
+    @apply text-3xl font-semibold text-slate-900;
+  }
+
+  .admin-subtitle {
+    @apply mt-1 text-slate-500;
+  }
+
+  /* Panels (cards) */
+  .admin-panel {
+    @apply rounded-xl border bg-white shadow-sm;
+  }
+
+  /* Text helpers */
+  .admin-muted {
+    @apply text-slate-500;
+  }
+
+  .admin-panel-title {
+    @apply text-sm font-semibold text-slate-900;
+  }
+}

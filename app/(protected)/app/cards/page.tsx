@@ -1,5 +1,5 @@
-import CardsClient from "@/components/screens/CardsClient";
+import { redirect } from "next/navigation";
 
-export default function CardsPage() {
-  return <CardsClient />;
+export default function CardsRedirect() {
+  redirect("/app/admin/cards");
 }

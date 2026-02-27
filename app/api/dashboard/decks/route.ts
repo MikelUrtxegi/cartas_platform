@@ -1,29 +1,37 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
+import type { NextRequest } from "next/server";
+import type { JWT } from "next-auth/jwt";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BACKEND_URL = process.env.BACKEND_URL ?? "http://localhost:8000";
 
 export async function GET(req: NextRequest) {
-  if (!API_BASE) {
-    return NextResponse.json({ detail: "Missing NEXT_PUBLIC_API_BASE_URL" }, { status: 500 });
+  const token: JWT | null = await getToken({
+    req,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  if (!token?.access) {
+    return NextResponse.json({ detail: "Unauthorized" }, { status: 401 });
   }
 
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  const access = (token as { access?: string } | null)?.access;
+  const upstream = `${BACKEND_URL}/api/dashboard/decks/`;
 
-  if (!access) {
-    return NextResponse.json({ detail: "Not authenticated" }, { status: 401 });
-  }
-
-  const upstream = await fetch(`${API_BASE}/api/dashboard/decks/`, {
+  const res = await fetch(upstream, {
     method: "GET",
-    headers: { Authorization: `Bearer ${access}` },
+    headers: {
+      Authorization: `Bearer ${token.access}`,
+      "Content-Type": "application/json",
+    },
     cache: "no-store",
   });
 
-  const text = await upstream.text();
-  return new NextResponse(text, {
-    status: upstream.status,
-    headers: { "Content-Type": upstream.headers.get("content-type") ?? "application/json" },
+  const body = await res.text();
+
+  return new NextResponse(body, {
+    status: res.status,
+    headers: {
+      "Content-Type": res.headers.get("content-type") ?? "application/json",
+    },
   });
 }

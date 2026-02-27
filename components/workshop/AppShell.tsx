@@ -4,10 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const tabs = [
-  { href: "/dashboard", label: "Dashboard" },
-  { href: "/decks", label: "Mazos" },
-  { href: "/cards", label: "Cartas" },
-  { href: "/results", label: "Resultados" },
+  { href: "/app/admin", label: "Dashboard" },
+  { href: "/app/admin/decks", label: "Mazos" },
+  { href: "/app/admin/cards", label: "Cartas" },
+  { href: "/app/admin/results", label: "Resultados" },
 ];
 
 function cn(...classes: Array<string | false | null | undefined>) {
@@ -30,7 +30,7 @@ export function AppShell({
       <header className="sticky top-0 z-20 border-b bg-white">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
           <div className="flex items-center gap-6">
-            <Link href="/dashboard" className="flex items-center gap-2">
+            <Link href="/app/admin" className="flex items-center gap-2">
               <div className="grid h-9 w-9 place-items-center rounded-full bg-blue-600 text-sm font-semibold text-white">
                 C-D
               </div>
@@ -41,8 +41,12 @@ export function AppShell({
 
             <nav className="hidden items-center gap-1 md:flex">
               {tabs.map((t) => {
-                const active =
-                  pathname === t.href || pathname?.startsWith(t.href + "/");
+                const href = t.href;
+                const isDashboardRoot = href === "/app/admin"; // ajusta si tu dashboard es otra ruta
+                const active = isDashboardRoot
+                  ? pathname === href
+                  : pathname === href || pathname?.startsWith(href + "/");
+
                 return (
                   <Link
                     key={t.href}

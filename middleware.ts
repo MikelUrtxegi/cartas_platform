@@ -3,7 +3,7 @@ import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/app/:path*"], // protege todo lo que esté dentro de /app
 };
 
 export async function middleware(req: NextRequest) {
