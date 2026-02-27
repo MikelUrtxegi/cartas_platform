@@ -5,7 +5,6 @@ import { useSession, signOut } from "next-auth/react";
 
 import DashboardView from "@/components/screens/DashboardView";
 import type { DashboardData } from "@/types/dashboard";
-import { fetchWithToken } from "@/lib/auth/fetchWithToken";
 
 type SessionWithTokens = {
   access?: string;
@@ -34,22 +33,21 @@ export default function AdminPage() {
       try {
         setError(null);
 
-        if (!token) throw new Error("Missing access token (login required)");
-
-        const response = await fetchWithToken("/api/dashboard/summary/", token);
+        const response = await fetch("/api/dashboard/summary/", {
+          method: "GET",
+        });
 
         if (!response.ok) {
-          const message = await response.text();
+          const message = await response.text().catch(() => "");
           throw new Error(
             `Dashboard fetch failed (${response.status}): ${message}`,
           );
         }
 
-        const json: DashboardData = await response.json();
+        const json = await response.json();
         setData(json);
-      } catch (err) {
-        setData(null);
-        setError(err instanceof Error ? err.message : "Unknown error");
+      } catch (e) {
+        setError(e instanceof Error ? e.message : "Error cargando dashboard");
       }
     }
 
